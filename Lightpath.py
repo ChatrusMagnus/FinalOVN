@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 class Lightpath(object):
     """
     A class used to virtualized lightpaths
@@ -28,9 +16,6 @@ class Lightpath(object):
 
     noise_power : float64 dB o dBm
         the noise power of the path with this lightpath
-
-    noise_power : float64 dB o dBm
-        the number of legs the animal has (default 4)
 
     channel : int
         the number of channels of the lightpath
@@ -122,9 +107,21 @@ class Lightpath(object):
         self._latency = latency
 
     def add_noise(self, noise):
+        """
+        Parameters
+        ----------
+            noise_power : float64 dB o dBm
+                the noise power of the path with this lightpath
+        """
         self._noise_power += noise
 
     def add_latency(self, latency):
+        """
+        Parameters
+        ----------
+            latency : float64 s
+                represent the time in which the signal goes throw the path defined
+         """
         self._latency += latency
 
     def next(self):
