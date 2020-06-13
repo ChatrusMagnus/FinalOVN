@@ -140,7 +140,7 @@ class Line(object):
         Nch = channel;
         eta = 16 / (27 * pi) * \
               np.log(pi ** 2 * self.b2 * Rs ** 2 * Nch ** (2 * Rs / df) / (2 * self.alpha)) * \
-              self.gamma ** 2 / (4 * self.alpha * self.b2 * Rs ** 3) * Bn
+              self.gamma ** 2 / (4 * self.alpha * self.b2 * Rs ** 3)*Bn
         return eta
 
     def nli_generation(self, signal_power, Rs, df,Bn=12.5e9,channel=10):
@@ -149,9 +149,9 @@ class Line(object):
         Nch = channel;
         loss = np.exp(-self.alpha * self.span_length)
         Na = self.amplifier
-        eta= self.eta_nli(Rs,df,channel,Bn)
+        eta= self.eta_nli(Rs,df,channel,1)
         #no bn because already in eta nli
-        nli = Na*(Pch **3 * loss * self . gain * eta )
+        nli = Na*(Pch **3 * loss * self . gain * eta *Bn)
 
         return nli
 

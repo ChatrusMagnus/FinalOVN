@@ -9,8 +9,8 @@ def main():
     network.connect()
     node_labels = list(network.nodes.keys())
     connections = []
-    for i in range(100):
-        random.shuffle(node_labels)
+    for i in range(10):
+        #random.shuffle(node_labels)
         connection = Connection(node_labels[0], node_labels[-1])
         connections.append(connection)
     streamed_connections = network.stream(connections, best='snr')
