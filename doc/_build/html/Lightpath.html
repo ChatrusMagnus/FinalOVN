@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightpath module &#8212; Open and virtualized networks labs  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Lightpath">
+<span id="lightpath-module"></span><h1>Lightpath module<a class="headerlink" href="#module-Lightpath" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Lightpath.Lightpath">
+<em class="property">class </em><code class="sig-prename descclassname">Lightpath.</code><code class="sig-name descname">Lightpath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">rs</span><span class="o">=</span><span class="default_value">32000000000.0</span></em>, <em class="sig-param"><span class="n">df</span><span class="o">=</span><span class="default_value">50000000000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lightpath.Lightpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class used to virtualized lightpaths</p>
+<dl class="simple">
+<dt>signal_power<span class="classifier">float64 W o dBm</span></dt><dd><p>a float that represents the signal power on that lightpath</p>
+</dd>
+<dt>path<span class="classifier">str</span></dt><dd><p>a string that represents the path of the lightpath
+this path A-&gt;B-&gt;C-&gt;D is formatted in this way “ABCD” where every letter is a node</p>
+</dd>
+<dt>latency<span class="classifier">float64 s</span></dt><dd><p>represent the time in which the signal goes throw the path defined</p>
+</dd>
+<dt>noise_power<span class="classifier">float64 dB o dBm</span></dt><dd><p>the noise power of the path with this lightpath</p>
+</dd>
+<dt>channel<span class="classifier">int</span></dt><dd><p>the number of channels of the lightpath</p>
+</dd>
+<dt>rs<span class="classifier">int</span></dt><dd><p>symbol rate</p>
+</dd>
+<dt>df<span class="classifier">float64 or int</span></dt><dd><p>Wavelength Division Multiplexing channel spacing</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>add_noise(self, noise):</dt><dd><p>adds noise_power to the current noise_power</p>
+</dd>
+<dt>def add_latency(self, latency):</dt><dd><p>adds latency to the current latency</p>
+</dd>
+<dt>def next(self):</dt><dd><p>used for recursive functions based on path</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="Lightpath.Lightpath.add_latency">
+<code class="sig-name descname">add_latency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">latency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lightpath.Lightpath.add_latency" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>latency<span class="classifier">float64 s</span></dt><dd><p>represent the time in which the signal goes throw the path defined</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.add_noise">
+<code class="sig-name descname">add_noise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">noise</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Lightpath.Lightpath.add_noise" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>noise_power<span class="classifier">float64 dB o dBm</span></dt><dd><p>the noise power of the path with this lightpath</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.channel">
+<em class="property">property </em><code class="sig-name descname">channel</code><a class="headerlink" href="#Lightpath.Lightpath.channel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.df">
+<em class="property">property </em><code class="sig-name descname">df</code><a class="headerlink" href="#Lightpath.Lightpath.df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.latency">
+<em class="property">property </em><code class="sig-name descname">latency</code><a class="headerlink" href="#Lightpath.Lightpath.latency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Lightpath.Lightpath.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.noise_power">
+<em class="property">property </em><code class="sig-name descname">noise_power</code><a class="headerlink" href="#Lightpath.Lightpath.noise_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.path">
+<em class="property">property </em><code class="sig-name descname">path</code><a class="headerlink" href="#Lightpath.Lightpath.path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.rs">
+<em class="property">property </em><code class="sig-name descname">rs</code><a class="headerlink" href="#Lightpath.Lightpath.rs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Lightpath.Lightpath.signal_power">
+<em class="property">property </em><code class="sig-name descname">signal_power</code><a class="headerlink" href="#Lightpath.Lightpath.signal_power" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Open and virtualized networks labs</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Federico Chatrian.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Lightpath.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

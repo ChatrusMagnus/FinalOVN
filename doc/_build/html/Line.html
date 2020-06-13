@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line module &#8212; Open and virtualized networks labs  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Line">
+<span id="line-module"></span><h1>Line module<a class="headerlink" href="#module-Line" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Line.Line">
+<em class="property">class </em><code class="sig-prename descclassname">Line.</code><code class="sig-name descname">Line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line_dictionary</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="Line.Line.alpha">
+<em class="property">property </em><code class="sig-name descname">alpha</code><a class="headerlink" href="#Line.Line.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>alpha is linear</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.amplifier">
+<em class="property">property </em><code class="sig-name descname">amplifier</code><a class="headerlink" href="#Line.Line.amplifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.ase_generation">
+<code class="sig-name descname">ase_generation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Bn</span><span class="o">=</span><span class="default_value">12500000000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.ase_generation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.b2">
+<em class="property">property </em><code class="sig-name descname">b2</code><a class="headerlink" href="#Line.Line.b2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.eta_nli">
+<code class="sig-name descname">eta_nli</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Rs</span></em>, <em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.eta_nli" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.gain">
+<em class="property">property </em><code class="sig-name descname">gain</code><a class="headerlink" href="#Line.Line.gain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.gamma">
+<em class="property">property </em><code class="sig-name descname">gamma</code><a class="headerlink" href="#Line.Line.gamma" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.label">
+<em class="property">property </em><code class="sig-name descname">label</code><a class="headerlink" href="#Line.Line.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.latency_generation">
+<code class="sig-name descname">latency_generation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.latency_generation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.length">
+<em class="property">property </em><code class="sig-name descname">length</code><a class="headerlink" href="#Line.Line.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.nli_generation">
+<code class="sig-name descname">nli_generation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">signal_power</span></em>, <em class="sig-param"><span class="n">Rs</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">Bn</span><span class="o">=</span><span class="default_value">12500000000.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.nli_generation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.noise_figure">
+<em class="property">property </em><code class="sig-name descname">noise_figure</code><a class="headerlink" href="#Line.Line.noise_figure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.noise_generation">
+<code class="sig-name descname">noise_generation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lightpath</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.noise_generation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.propagate">
+<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lightpath</span></em>, <em class="sig-param"><span class="n">occupation</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.propagate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.span_length">
+<em class="property">property </em><code class="sig-name descname">span_length</code><a class="headerlink" href="#Line.Line.span_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#Line.Line.state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.successive">
+<em class="property">property </em><code class="sig-name descname">successive</code><a class="headerlink" href="#Line.Line.successive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Line.Line.transparency">
+<code class="sig-name descname">transparency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Line.Line.transparency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Open and virtualized networks labs</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Federico Chatrian.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Line.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
