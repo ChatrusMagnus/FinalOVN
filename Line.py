@@ -104,8 +104,7 @@ class Line(object):
         return (self.length / 300000000) * (3 / 2)
 
     def noise_generation(self, lightpath):
-        noise = self.ase_generation() + self.nli_generation(lightpath.signal_power, lightpath.Rs, lightpath.df)
-
+        noise = self.ase_generation() + self.nli_generation(lightpath.signal_power, lightpath.rs, lightpath.df)
         return noise
 
     def propagate(self, lightpath, occupation=False):
@@ -137,11 +136,11 @@ class Line(object):
         ase = N * (h * frequency * Bn * 10**(NF/10) * (G - 1))
         return ase
 
-    def eta_nli(self,Rs,df,channel=10):
+    def eta_nli(self,Rs,df,channel=10,Bn=12.5e9):
         Nch = channel;
         eta = 16 / (27 * pi) * \
               np.log(pi ** 2 * self.b2 * Rs ** 2 * Nch ** (2 * Rs / df) / (2 * self.alpha)) * \
-              self.gamma ** 2 / (4 * self.alpha * self.b2 * Rs ** 3) * BN
+              self.gamma ** 2 / (4 * self.alpha * self.b2 * Rs ** 3) * Bn
         return eta
 
     def nli_generation(self, signal_power, Rs, df,Bn=12.5e9,channel=10):
@@ -150,9 +149,9 @@ class Line(object):
         Nch = channel;
         loss = np.exp(-self.alpha * self.span_length)
         Na = self.amplifier
-        eta= self.eta_nli(Rs,df,channel)
-         # now I can calculate the Non Linear Interferance
-        nli = Na*(Pch **3 * loss * self . gain * eta * Bn)
+        eta= self.eta_nli(Rs,df,channel,Bn)
+        #no bn because already in eta nli
+        nli = Na*(Pch **3 * loss * self . gain * eta )
 
         return nli
 

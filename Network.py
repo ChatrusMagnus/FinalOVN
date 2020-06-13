@@ -270,7 +270,7 @@ class Network(object):
                     connection.latency = end_lightpath.latency
 
                     connection.snr = 10 * np.log10(end_lightpath.signal_power / end_lightpath.noise_power)
-                    self.update_route_space(new_path, channel)
+                    self.update_route_space(new_path, tmp_channel)
                 else:
                     connection.latency = None
                     connection.snr = 0
