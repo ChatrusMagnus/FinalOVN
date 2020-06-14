@@ -282,15 +282,14 @@ class Network(object):
                         connection.block_connection()
                     else:
                         connection.set_connection(end_lightpath)
-                    self.update_route_space(end_lightpath.path, end_lightpath.channel, 'occupied')
                         if connection.residual_rate_request > 0:
-                            self.stream([connection], best, transceiver, type='iter')
-
+                            self.stream([connection], best, transceiver)
+                            #, type='iter'?????
             else:
                 [self.update_route_space(lp.path, lp.channel, 'free ') for lp in connection.lightpaths]
                 connection.block_connection()
+            self.update_route_space(end_lightpath.path, end_lightpath.channel, 'occupied')
             streamed_connections.append(connection)
-
         return streamed_connections
 
     def calculate_bitrate(self, lightpath, bert=1e-3,bn=12.5e9):
@@ -318,19 +317,15 @@ class Network(object):
         lightpath.bitrate= float(rb)
         return float(rb)
 
-    def update_route_space(self, path, channel=10):
+    def update_route_space(self, path, channel,state):
         all_paths = [self.path_to_line_set(p) for p in self.route_space.path.values]
-        states = self._route_space[str(channel)]
+        states = self.route_space[str(channel)]
         lines = self.path_to_line_set(path)
         for i in range(len(all_paths)):
             line_set = all_paths[i]
             if lines.intersection(line_set):
-                '''print(lines)
-                print(all_paths[i])
-                print(channel)'''
-                states[i] = 'occupied'
+                states[i] = state
         self.route_space[str(channel)] = states
-        # print(self.route_space[str(channel)])
 
     def optimization(self, lightpath):
         path = lightpath.path

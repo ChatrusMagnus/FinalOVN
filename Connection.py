@@ -5,7 +5,7 @@ class Connection(object):
         self._end_node = end_node
         self._signal_power = None
         self._latency = 0
-        self._snr = 0
+        self._snr = []
         self._bitrate = None
         self._rate_request = float(rate_request)
         self._residual_rate_request = float(rate_request)
@@ -72,7 +72,7 @@ class Connection(object):
 
     @snr.setter
     def snr(self, snr):
-        self._snr = snr
+        self._snr.append(snr)
 
     def set_connection(self, lightpath):
         self.signal_power = lightpath.signal_power
