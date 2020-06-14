@@ -67,11 +67,10 @@ def main():
     print(df)
     plot3Dbars(t)
     plot3Dbars(df.values)
-    print('Avg SNR: {:.2 f} dB '.format(np.mean \
-                                            (list(filter(lambda x: x != 0, snrs)))))
-    print('Total Capacity Connections : {:.2 f} Tbps '.format(np.sum(rbc) * 1e-3))
-    print('Total Capacity Lightpaths : {:.2 f} Tbps '.format(np.sum(rbl) * 1e-3))
-    print('Avg Capacity : {:.2 f} Gbps '.format(np.mean(rbc)))
+    print('Avg SNR: {:.2f} dB '.format(np.mean(list(filter(lambda x: x != 0, snrs)))))
+    print('Total Capacity Connections : {:.2f} Tbps '.format(np.sum(rbc) * 1e-3))
+    print('Total Capacity Lightpaths : {:.2f} Tbps '.format(np.sum(rbl) * 1e-3))
+    print('Avg Capacity : {:.2f} Gbps '.format(np.mean(rbc)))
 
     '''
     network = Network('nodes.json')
