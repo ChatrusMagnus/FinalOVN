@@ -1,6 +1,6 @@
 class Lightpath(object):
     """
-    A class used to virtualized lightpaths
+    A class used to virtualized lightpaths up to lab 8
 
     Attributes
     ----------
@@ -37,7 +37,7 @@ class Lightpath(object):
     def next(self):
         used for recursive functions based on path
     """
-    def __init__(self, path, channel=10, rs=32e9, df=50e9):
+    def __init__(self, path, channel=10, rs=32e9, df=50e9, transceiver='shannon'):
         """
         Parameters
         ----------
@@ -60,6 +60,34 @@ class Lightpath(object):
         self._channel = channel
         self._rs = rs
         self._df = df
+        self._snr = None
+        self._optimized_powers = {}
+        self._transceiver = transceiver
+        self._bitrate = None
+
+    @property
+    def transceiver(self):
+        return self._transceiver
+
+    @transceiver.setter
+    def transceiver(self, transceiver):
+        return self._transceiver
+
+    @property
+    def bitrate(self):
+        return self._bitrate
+
+    @bitrate.setter
+    def bitrate(self, bitrate):
+        self._bitrate = bitrate
+
+    @property
+    def snr(self):
+        return self._snr
+
+    @snr.setter
+    def snr(self, snr):
+        self._snr = snr
 
     @property
     def channel(self):
@@ -126,3 +154,17 @@ class Lightpath(object):
 
     def next(self):
         self._path = self._path[1:]
+
+    @property
+    def optimized_powers(self):
+        return self._optimized_powers
+
+    @optimized_powers.setter
+    def optimized_powers(self, optimized_powers):
+        self._optimized_powers = optimized_powers
+
+    def update_snr(self, snr):
+        if self.snr is None:
+            self.snr = snr
+        else:
+            self.snr = 1 / ((1 / self.snr) + (1 / snr))

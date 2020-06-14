@@ -3,6 +3,7 @@ import json
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.special import erfcinv
 
 from FinalOVN.Line import Line
 from FinalOVN.Node import Node
@@ -75,6 +76,13 @@ class Network(object):
         # problem here !!!
         return None
 
+    def optimization(self,lightpath):
+        path= lightpath.path
+        start_node=self.nodes[path[0]]
+        optimized_lightpath=start_node.optimize(lightpath)
+        optimized_lightpath.path=path
+        return optimized_lightpath
+
     def available_paths(self, input_node, output_node):
         if self.weighted_paths is None:
             self.set_weighted_paths(1)
@@ -139,13 +147,14 @@ class Network(object):
                 # are occupied, channel should be occupied only when fast connection or reliable connection is established
                 latencies.append(lightpath.latency)
                 noises.append(lightpath.noise_power)
-                snrs.append(10*np.log10(abs(lightpath.signal_power/lightpath.noise_power)))
+                snrs.append(10*np.log10(lightpath.snr))
 
         df['path'] = paths
         df['latency'] = latencies
         df['noise'] = noises
         df['snr'] = snrs
         self._weighted_paths = df
+        df.to_html('ciao.html')
         if not self._is_route:
             route_space = pd.DataFrame()
             route_space['path'] = paths
@@ -237,7 +246,7 @@ class Network(object):
         path = path.replace('->', '')
         return set([path[i] + path[i + 1] for i in range(len(path) - 1)])
 
-    def stream(self, connections, best='latency',channel=10):
+    def stream(self, connections, best='latency',transceiver ='shannon',channel=10):
         streamed_connections = []
 
         for connection in connections:
@@ -251,8 +260,8 @@ class Network(object):
             else:
                 print('ERROR : best input does not coindice with either latency or snr, best.')
                 continue
-            if path:
 
+            if path:
                 path_occupancy = self.route_space.loc[self.route_space.path == path].T.values[1:]
 
                 tmp_channel = 0
@@ -263,13 +272,17 @@ class Network(object):
                         break
                     tmp_channel += 1
                 if (tmp_channel >= 0 and tmp_channel < channel):
-                    start_lightpath = Lightpath(new_path, tmp_channel)
+                    start_lightpath = Lightpath(new_path, tmp_channel,transceiver = transceiver)
                     start_lightpath = self.optimization(start_lightpath)
-
                     end_lightpath = self.propagate(start_lightpath, True)
                     connection.latency = end_lightpath.latency
-
-                    connection.snr = 10 * np.log10(end_lightpath.signal_power / end_lightpath.noise_power)
+                    connection.signal_power = end_lightpath.signal_power
+                    connection.snr = 10 * np.log10(end_lightpath.snr)
+                    connection.bitrate = self.calculate_bitrate(end_lightpath)
+                    if not connection.bitrate:
+                        connection.latency = None
+                        connection.snr = 0
+                        connection.bitrate = 0
                     self.update_route_space(new_path, tmp_channel)
                 else:
                     connection.latency = None
@@ -279,6 +292,31 @@ class Network(object):
                 connection.snr = 0
             streamed_connections.append(connection)
         return streamed_connections
+
+    def calculate_bitrate(self, lightpath, bert=1e-3,bn=12.5e9):
+        snr = lightpath.snr
+        Rs=lightpath.rs
+
+        if lightpath.transceiver.lower() == 'fixed-rate':
+            snrt = 2 * erfcinv(2*bert) * (Rs/bn)
+            rb=np.piecewise(snr, [snr < snrt, snr >= snrt], [0, 100])
+
+        elif lightpath.transceiver.lower() == 'flex-rate':
+            snrt1= 2*erfcinv(2*bert)**2 * (Rs/bn)
+            snrt2= (14/3)* erfcinv(3/2*bert)**2 * (Rs/bn)
+            snrt3= (10)* erfcinv(8/3*bert)**2 * (Rs/bn)
+
+            cond1 = (snr < snrt1)
+            cond2 = (snr >= snrt1 and snr < snrt2)
+            cond3 = (snr >= snrt2 and snr <snrt3)
+            cond4 = (snr >= snrt3)
+
+            rb=np.piecewise(snr, [cond1, cond2, cond3, cond4], [0, 100, 200, 400])
+        elif lightpath.transceiver.lower() == 'shannon':
+            rb=2*Rs*np.log2(1+snr*(Rs/bn)) * 1e-9
+
+        lightpath.bitrate= float(rb)
+        return float(rb)
 
     def update_route_space(self, path, channel=10):
         all_paths = [self.path_to_line_set(p) for p in self.route_space.path.values]
@@ -295,15 +333,10 @@ class Network(object):
         # print(self.route_space[str(channel)])
 
     def optimization(self, lightpath):
-        # sets the lightpath power to the optimal \
-        # power calculated on the first line of the path
-        first_line = lightpath.path[0:2]
-        line = self.lines[first_line]
-
-        ase = line.ase_generation()
-        eta = line.eta_nli(lightpath.rs, lightpath.df)
-        lightpath.signal_power=np.cbrt((ase/line.amplifier)/(2*eta))  # calculate optimum power
-
-        return lightpath
+        path = lightpath.path
+        start_node = self.nodes[path[0]]
+        optimized_lightpath = start_node.optimize(lightpath)
+        optimized_lightpath.path = path
+        return optimized_lightpath
 
 
