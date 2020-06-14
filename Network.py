@@ -248,7 +248,6 @@ class Network(object):
 
     def stream(self, connections, best='latency',transceiver ='shannon',channel=10):
         streamed_connections = []
-
         for connection in connections:
             start_node = connection.start_node
             end_node = connection.end_node
@@ -263,7 +262,6 @@ class Network(object):
 
             if path:
                 path_occupancy = self.route_space.loc[self.route_space.path == path].T.values[1:]
-
                 tmp_channel = 0
                 new_path = path.replace('->', '')
 
@@ -271,26 +269,28 @@ class Network(object):
                     if (i == 'free'):
                         break
                     tmp_channel += 1
+
                 if (tmp_channel >= 0 and tmp_channel < channel):
                     start_lightpath = Lightpath(new_path, tmp_channel,transceiver = transceiver)
                     start_lightpath = self.optimization(start_lightpath)
                     end_lightpath = self.propagate(start_lightpath, True)
-                    connection.latency = end_lightpath.latency
-                    connection.signal_power = end_lightpath.signal_power
-                    connection.snr = 10 * np.log10(end_lightpath.snr)
-                    connection.bitrate = self.calculate_bitrate(end_lightpath)
-                    if not connection.bitrate:
-                        connection.latency = None
-                        connection.snr = 0
-                        connection.bitrate = 0
-                    self.update_route_space(new_path, tmp_channel)
-                else:
-                    connection.latency = None
-                    connection.snr = 0
+                    #
+                    self.calculate_bitrate(end_lightpath)
+                    #
+                    if end_lightpath.bitrate == 0.0:
+                        [self.update_route_space(lp.path, lp.channel, 'free') for lp in connection.lightpaths]
+                        connection.block_connection()
+                    else:
+                        connection.set_connection(end_lightpath)
+                    self.update_route_space(end_lightpath.path, end_lightpath.channel, 'occupied')
+                        if connection.residual_rate_request > 0:
+                            self.stream([connection], best, transceiver, type='iter')
+
             else:
-                connection.latency = None
-                connection.snr = 0
+                [self.update_route_space(lp.path, lp.channel, 'free ') for lp in connection.lightpaths]
+                connection.block_connection()
             streamed_connections.append(connection)
+
         return streamed_connections
 
     def calculate_bitrate(self, lightpath, bert=1e-3,bn=12.5e9):
