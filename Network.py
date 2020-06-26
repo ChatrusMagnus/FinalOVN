@@ -10,10 +10,11 @@ from FinalOVN.Node import Node
 from FinalOVN.Lightpath import Lightpath
 
 class Network(object):
-    def __init__(self, json_path):
+    def __init__(self, json_path,Nch=10, upgrade_line =''):
         node_json = json.load(open(json_path, 'r'))
         self._nodes = {}
         self._lines = {}
+        self._Nch=Nch
         self._weighted_paths = None
         self._connected = False
         self._route_space = None
@@ -41,13 +42,21 @@ class Network(object):
                 connected_node_position = np.array(node_json[connected_node_label]['position'])
                 # calculate lenght required for creating instance
                 line_dict['length'] = np.sqrt(np.sum((node_position - connected_node_position) ** 2))
-                line = Line(line_dict)
+                line = Line(line_dict,self.Nch)
                 # adds new line to dictionary
                 self._lines[line_label] = line
+
+        # if specified , upgrade line
+        if not upgrade_line == '':
+            self.lines[upgrade_line].noise_figure = self.lines[upgrade_line].noise_figure - 3
 
     @property
     def nodes(self):
         return self._nodes
+
+    @property
+    def Nch(self):
+        return self._Nch
 
     @property
     def lines(self):
@@ -66,7 +75,8 @@ class Network(object):
         return self._route_space
 
     # return line that connects start_node with end_node
-    def single_line_free(self, start_node, end_node,channel=10):
+    def single_line_free(self, start_node, end_node):
+        channel=self.Nch
         label = start_node + end_node
         for linep in self._lines.keys():
             for i in range(channel):
@@ -108,7 +118,9 @@ class Network(object):
 
     ## added end of lab 3 here in lab 4
     # tried to used setter but didn't work
-    def set_weighted_paths(self,channel=10):
+    def set_weighted_paths(self):
+        channel = self.Nch
+
         # checks the network is connected
         if not self.connected:
             self.connect()
@@ -246,7 +258,8 @@ class Network(object):
         path = path.replace('->', '')
         return set([path[i] + path[i + 1] for i in range(len(path) - 1)])
 
-    def stream(self, connections, best='latency',transceiver ='shannon',channel=10):
+    def stream(self, connections, best='latency',transceiver ='shannon'):
+        channel = self._Nch
         streamed_connections = []
         for connection in connections:
             start_node = connection.start_node
@@ -282,13 +295,16 @@ class Network(object):
                         connection.block_connection()
                     else:
                         connection.set_connection(end_lightpath)
+                        #before new_path there was end_lightpath
+                        self.update_route_space(new_path, end_lightpath.channel, 'occupied')
+                        #self.route_space.to_html('test1.html')
                         if connection.residual_rate_request > 0:
                             self.stream([connection], best, transceiver)
+                            #if residual it allocates on the same channel because is not set occupied
                             #, type='iter'?????
             else:
                 [self.update_route_space(lp.path, lp.channel, 'free ') for lp in connection.lightpaths]
                 connection.block_connection()
-            self.update_route_space(end_lightpath.path, end_lightpath.channel, 'occupied')
             streamed_connections.append(connection)
         return streamed_connections
 

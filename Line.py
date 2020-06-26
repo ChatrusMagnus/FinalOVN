@@ -2,7 +2,7 @@ import numpy as np
 from numpy import pi
 from scipy.constants import h
 class Line(object):
-    def __init__(self, line_dictionary,channel = 10, noise_figure=6,distance_amp=80e3):
+    def __init__(self, line_dictionary,channel=10, noise_figure=6,distance_amp=80e3,):
         """
         :param line_dictionary:
         """
@@ -14,6 +14,7 @@ class Line(object):
         self._span_length = self._length / self._amplifier
         self._alpha = 4.6e-5 #linear 0.20 db/m
         self._gamma = 1.27e-3
+        self._Nch =channel
         # Set Gain to transparency
         self._gain = self.transparency()
         self._noise_figure = noise_figure
@@ -26,6 +27,10 @@ class Line(object):
     @property
     def span_length(self):
             return self._span_length
+
+    @property
+    def Nch(self):
+        return self._Nch
 
     @property
     def alpha(self):
@@ -140,17 +145,17 @@ class Line(object):
         ase = N * (h * frequency * Bn * 10**(NF/10) * (G - 1))
         return ase
 
-    def eta_nli(self,Rs,df,channel=10,Bn=12.5e9):
-        Nch = channel;
+    def eta_nli(self,Rs,df,Bn=12.5e9):
+        Nch = self.Nch;
         eta = (16 / (27 * pi)) * \
               np.log(pi ** 2 * self.b2 * Rs ** 2 * Nch ** (2 * Rs / df) / (2 * self.alpha)) * \
               self.gamma ** 2 / (4 * self.alpha * self.b2) * (1/Rs ** 3)*Bn
         return eta
 
-    def nli_generation(self, signal_power, Rs, df,Bn=12.5e9,channel=10):
+    def nli_generation(self, signal_power, Rs, df,Bn=12.5e9):
         # Power of the channel
         Pch = signal_power;
-        Nch = channel;
+        Nch = self.Nch;
         loss = np.exp(-self.alpha * self.span_length)
         Na = self.amplifier
         eta= eta = 16 / (27 * pi ) * \
