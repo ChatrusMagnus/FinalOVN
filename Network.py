@@ -309,7 +309,7 @@ class Network(object):
         return streamed_connections
 
     def calculate_bitrate(self, lightpath, bert=1e-3,bn=12.5e9):
-        snr = lightpath.snr
+        snr = 10*np.log10(lightpath.snr)
         Rs=lightpath.rs
 
         if lightpath.transceiver.lower() == 'fixed-rate':

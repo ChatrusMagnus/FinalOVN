@@ -55,6 +55,7 @@ class Lightpath(object):
         """
         self._signal_power = None
         self._path = path
+        self._perma_path = path
         self._latency = 0
         self._noise_power = 0
         self._channel = channel
@@ -65,6 +66,13 @@ class Lightpath(object):
         self._transceiver = transceiver
         self._bitrate = None
 
+    @property
+    def channel(self):
+        return self._channel
+
+    @property
+    def perma_path(self):
+        return self._perma_path
     @property
     def transceiver(self):
         return self._transceiver
