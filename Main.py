@@ -3,6 +3,7 @@ import numpy as np
 import copy
 from FinalOVN.Network import Network
 from FinalOVN.Connection import Connection
+from FinalOVN.Analytics import Monte_carlo
 import matplotlib.pyplot as plt
 import pandas as pd
 import itertools as it
@@ -26,141 +27,8 @@ def plot3Dbars(t):
     plt.show()
 
 def main():
-    NMC = 1
-    node_pairs_realizations = []
-    stream_conn_list = []
-    lines_state_list = []
-    channel = 10
-    for i in range(NMC):
-        '''starts monte carlo realisation'''
-        print('Monte - Carlo Realization #{:d}'.format(i + 1))
-
-        network = Network('nodes.json',channel)  # creates nodes and line objects
-        network.connect()
-        #network.draw()
-
-        node_labels = list(network.nodes.keys())
-        T = create_traffic_matrix(node_labels, 600,5)
-        t = T.values
-        #all seems ok
-        connections = []
-        node_pairs = list(filter(lambda x: x[0] != x[1], list(it.product(node_labels, node_labels))))
-        unsorted_node_pairs=node_pairs
-        random.shuffle(node_pairs)
-        node_pairs_realizations.append(copy.deepcopy(node_pairs))
-        connections = []
-
-        for node_pair in node_pairs:
-            connection = Connection(node_pair[0], node_pair[-1], float(T.loc[node_pair[0], node_pair[-1]]))
-            connections.append(connection)  # list of connection objects
-        streamed_connections = network.stream(connections, best='snr', transceiver='shannon')
-        stream_conn_list.append(streamed_connections)
-        lines_state_list.append(network.lines)
-        snrs = []
-        [snrs.extend(connection.snr) for connection in streamed_connections]
-        rbl = []
-
-        for connection in streamed_connections:
-            for lightpath in connection.lightpaths:
-                rbl.append(lightpath.bitrate)
-        # Plot
-        plt.hist(snrs, bins=10)
-        plt.title('SNR Distribution [dB]')
-        plt.show()
-        rbc = [connection.calculate_capacity() for connection in streamed_connections]
-        plt.hist(rbc, bins=10)
-        plt.title('Connection Capacity Distribution [ Gbps ]')
-        plt.show()
-        plt.hist(rbl, bins=10)
-        plt.title('Lightpaths Capacity Distribution [ Gbps ]')
-        plt.show()
-        s = pd.Series(data=[0.0] * len(node_labels), index=node_labels)
-        df = pd.DataFrame(0.0, index=s.index, columns=s.index, dtype=s.dtype)
-        print(df)
-
-        for connection in streamed_connections:
-            df.loc[connection.start_node, connection.end_node] = connection.bitrate
-        print(df)
-        plot3Dbars(t)
-        plot3Dbars(df.values)
-        print('Avg SNR: {:.2f} dB '.format(np.mean(list(filter(lambda x: x != 0, snrs)))))
-        print('Total Capacity Connections : {:.2f} Tbps '.format(np.sum(rbc) * 1e-3))
-        print('Total Capacity Lightpaths : {:.2f} Tbps '.format(np.sum(rbl) * 1e-3))
-        print('Avg Capacity : {:.2f} Gbps '.format(np.mean(rbc)))
-
-    # Get MC stats
-    snr_conns = []
-    rbl_conns = []
-    rbc_conns = []
-
-    for streamed_conn in stream_conn_list:
-        snrs = []
-        rbl = []
-        [snrs.extend(connection.snr) for connection in streamed_conn]
-        for connection in streamed_conn:
-            for lightpath in connection.lightpaths:
-                rbl.append(lightpath.bitrate)
-
-        rbc = [connection.calculate_capacity() for connection in streamed_conn]
-
-        snr_conns.append(snrs)
-        rbl_conns.append(rbl)
-        rbc_conns.append(rbc)
-
-        avg_snr_list = []
-        avg_rbl_list = []
-        traffic_list = []
-        [traffic_list.append(np.sum(rbl_list)) for rbl_list in rbl_conns]
-        [avg_rbl_list.append(np.mean(rbl_list)) for rbl_list in rbl_conns]
-        [avg_snr_list.append(np.mean(list(filter(lambda x: x != 0, snr_list)))) for snr_list in snr_conns]
-
-        # Congestion
-        lines_labels = list(lines_state_list[0].keys())
-        congestions = {label: [] for label in lines_labels}
-        for line_state in lines_state_list:
-            for line_label, line in line_state.items():
-                cong = line.state.count('occupied') / len(line.state)
-                congestions[line_label].append(cong)
-        avg_congestion = {label: [] for label in lines_labels}
-        for line_label, cong in congestions.items():
-            avg_congestion[line_label] = np.mean(cong)
-            print(avg_congestion[line_label])
-        plt.bar(range(len(avg_congestion)), list(avg_congestion.values()), align='center')
-        plt.xticks(range(len(avg_congestion)), list(avg_congestion.keys()))
-        plt.show()
-
-
-        print('\n')
-        print('Line to upgrade : {} '.format(max(avg_congestion, key=avg_congestion.get)))
-        print('Avg Total Traffic : {:.2f} Tbps '.format(np.mean(traffic_list) * 1e-3))
-        print('Avg Lighpath Bitrate : {:.2f} Gbps '.format(np.mean(avg_rbl_list)))
-        print('Avg Lighpath SNR: {:.2f} dB '.format(np.mean(avg_snr_list)))
-
-        #new stat
-        columns = []
-        index=[]
-        for line in network.lines:
-            index.append(line)
-        channels=[]
-        for i in range(channel):
-            columns.append(str(i))
-            channels.append([])
-        df = pd.DataFrame(index=index,columns=columns)
-        for connection in streamed_conn:
-            for lightpath in connection.lightpaths:
-                print(lightpath.perma_path)
-                tmp_channel=lightpath.channel
-                path=lightpath.perma_path
-                for i in range(len(path)-1):
-                    df[str(tmp_channel)][path[i]+path[i+1]]=lightpath.bitrate
-
-        df.to_html('ciao2.html')
-        network.route_space.to_html('ciao.html')
-
-
-
-
-
+    analitic=Monte_carlo(2,10,600,'snr','shannon',5)
+    analitic.run_simulations()
 
 if __name__ == "__main__":
     main()
