@@ -2,7 +2,7 @@ import numpy as np
 from numpy import pi
 from scipy.constants import h
 class Line(object):
-    def __init__(self, line_dictionary,channel=10, noise_figure=6,distance_amp=80e3,):
+    def __init__(self, line_dictionary,channel=10, noise_figure=6,distance_amp=80e3,b2= 21.27e-27):
         """
         :param line_dictionary:
         """
@@ -10,7 +10,7 @@ class Line(object):
         self._length = line_dictionary['length'] *1e3 #conversion in m
         self._state = ['free'] * channel
         self._amplifier = int(np.ceil(self._length / distance_amp))
-        self._b2 = 21.27e-27
+        self._b2=b2
         self._span_length = self._length / self._amplifier
         self._alpha = 4.6e-5 #linear 0.20 db/m
         self._gamma = 1.27e-3

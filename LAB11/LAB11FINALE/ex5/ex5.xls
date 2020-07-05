@@ -1,0 +1,15 @@
+LEAF	
+	
+DATA	
+simulation_number	50
+channel	10
+request_rate	600
+best	snr
+transceiver	shannon
+multiplier	1
+	
+RESULTS	
+Line to upgrade	EF
+Avg Total Traffic 	21.91 Tbps 
+Avg Lighpath Bitrate	365.17 Gbps 
+Avg Lighpath SNR	20.07 dB

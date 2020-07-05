@@ -10,7 +10,7 @@ from FinalOVN.Connection import Connection
 
 
 class Monte_carlo(object):
-    def __init__(self,simulation_number=1,channel=10,request_rate=600,best='snr',transceiver='shannon',multiplier=1):
+    def __init__(self,simulation_number=1,channel=10,request_rate=600,best='snr',transceiver='shannon',multiplier=1,b2 = 21.27e-27):
         self._number_simulations=simulation_number
         self._channel=channel
         self._request_rate=request_rate
@@ -27,6 +27,11 @@ class Monte_carlo(object):
         self._avg_snr_list=[]
         self._avg_rbl_list=[]
         self._traffic_list=[]
+        self._b2=b2
+
+    @property
+    def b2(self):
+        return self._b2
 
     @property
     def avg_snr_list(self):
@@ -195,15 +200,15 @@ class Monte_carlo(object):
         print('Avg Lighpath SNR: {:.2f} dB '.format(np.mean(self.avg_snr_list)))
 
 
-    def run_simulations(self):
+    def run_simulations(self,upgrade_line =''):
         node_pairs_realizations = []
         stream_conn_list = []
         lines_state_list = []
         for mc in range(self._number_simulations):
             print('Monte - Carlo Realization #{:d}'.format(mc + 1))
-            network = Network('nodes.json', self.channel)  # creates nodes and line objects
+            network = Network('nodes2.json', self.channel,upgrade_line,self.b2)  # creates nodes and line objects
             network.connect()
-
+            #network.draw()
             node_labels=list(network.nodes.keys())
             T=self.create_traffic_matrix(node_labels, self.request_rate, self.multiplier)
             t=T.values
@@ -250,12 +255,12 @@ class Monte_carlo(object):
                     path=lightpath.perma_path
                     for i in range(len(path) - 1):
                         df[str(tmp_channel)][path[i] + path[i + 1]]=lightpath.bitrate
-            df.to_html('channel_occupancy_bitrate'+str(mc)+'.html')
+           # df.to_html('channel_occupancy_bitrate'+str(mc)+'.html')
 
-            self.plot_list_snr('pdf',10,mc)
-            self.plot_list_bitrate_lightpaths('pdf', 10, mc)
-            self.plot_list_bitrate_connections('pdf', 10, mc)
-            self.plot_dataframe_connection_bitrate('pdf', mc)
+            #self.plot_list_snr('pdf',10,mc)
+            #self.plot_list_bitrate_lightpaths('pdf', 10, mc)
+            #self.plot_list_bitrate_connections('pdf', 10, mc)
+            #self.plot_dataframe_connection_bitrate('pdf', mc)
 
 
         # congestion

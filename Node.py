@@ -50,6 +50,7 @@ class Node(object):
     def optimize(self,lightpath):
         path = lightpath.path
         if len(path) > 1:
+            #first 2 elements
             line_label = path[:2]
             line = self.successive[line_label]
 

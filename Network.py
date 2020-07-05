@@ -10,7 +10,7 @@ from FinalOVN.Node import Node
 from FinalOVN.Lightpath import Lightpath
 
 class Network(object):
-    def __init__(self, json_path,Nch=10, upgrade_line =''):
+    def __init__(self, json_path,Nch=10, upgrade_line ='',fiber_type='SMF'):
         node_json = json.load(open(json_path, 'r'))
         self._nodes = {}
         self._lines = {}
@@ -42,7 +42,10 @@ class Network(object):
                 connected_node_position = np.array(node_json[connected_node_label]['position'])
                 # calculate lenght required for creating instance
                 line_dict['length'] = np.sqrt(np.sum((node_position - connected_node_position) ** 2))
-                line = Line(line_dict,self.Nch)
+                if fiber_type == 'SMF':
+                    line=Line(line_dict, self.Nch,6,80e3,21.27e-27)
+                elif fiber_type == 'LEAF':
+                    line=Line(line_dict, self.Nch,6,80e3,6.58e-27)
                 # adds new line to dictionary
                 self._lines[line_label] = line
 
@@ -124,9 +127,6 @@ class Network(object):
         # checks the network is connected
         if not self.connected:
             self.connect()
-            """
-            great modification check it
-            """
         node_labels = self.nodes.keys()
         pairs = []
         for label1 in node_labels:
