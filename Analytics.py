@@ -206,7 +206,7 @@ class Monte_carlo(object):
         lines_state_list = []
         for mc in range(self._number_simulations):
             print('Monte - Carlo Realization #{:d}'.format(mc + 1))
-            network = Network('nodes2.json', self.channel,upgrade_line,self.b2)  # creates nodes and line objects
+            network = Network('nodes.json', self.channel,upgrade_line,self.b2)  # creates nodes and line objects
             network.connect()
             #network.draw()
             node_labels=list(network.nodes.keys())

@@ -51,7 +51,7 @@ class Network(object):
 
         # if specified , upgrade line
         if not upgrade_line == '':
-            self.lines[upgrade_line].noise_figure = self.lines[upgrade_line].noise_figure - 3
+            self.lines[upgrade_line].noise_figure = self.lines[upgrade_line].noise_figure + 3
 
     @property
     def nodes(self):
@@ -166,7 +166,6 @@ class Network(object):
         df['noise'] = noises
         df['snr'] = snrs
         self._weighted_paths = df
-        df.to_html('ciao.html')
         if not self._is_route:
             route_space = pd.DataFrame()
             route_space['path'] = paths
