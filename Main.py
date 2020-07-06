@@ -1,7 +1,7 @@
 from FinalOVN.Analytics import Monte_carlo
 
 def main():
-    simulation_number=5
+    simulation_number=50
     channel=10
     request_rate=600
     best='snr'

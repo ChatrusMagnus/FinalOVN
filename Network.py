@@ -51,7 +51,8 @@ class Network(object):
 
         # if specified , upgrade line
         if not upgrade_line == '':
-            self.lines[upgrade_line].noise_figure = self.lines[upgrade_line].noise_figure + 3
+
+            self.lines[upgrade_line].noise_figure = self.lines[upgrade_line].noise_figure - 3
 
     @property
     def nodes(self):
